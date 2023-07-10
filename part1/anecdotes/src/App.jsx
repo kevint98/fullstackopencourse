@@ -16,7 +16,8 @@ function App() {
   ];
 
   const [selected, setSelected] = useState(0);
-  const [points, setPoints] = useState(new Uint8Array(anecdotes.length));
+  const [votes, setVotes] = useState(new Uint8Array(anecdotes.length));
+  const [mostVotes, setMostVotes] = useState(0);
 
   const getRandomInt = () => {
     return Math.floor(Math.random() * anecdotes.length);
@@ -27,29 +28,34 @@ function App() {
   };
 
   const handleVote = () => {
-    points[selected] += 1;
-    setPoints([...points]);
+    const newVotes = [...votes];
+    newVotes[selected] += 1;
+    setVotes(newVotes);
+
+    if (newVotes[selected] > votes[mostVotes]) {
+      setMostVotes(selected);
+    }
   };
 
-  const mostVotes = Math.max(...points);
+  // const mostVotes = Math.max(...votes);
 
-  const hasMostVotes = (element) => element === mostVotes;
+  // const hasMostVotes = (element) => element === mostVotes;
 
-  const mostVotesIndex = points.findIndex(hasMostVotes);
+  // const mostVotesIndex = votes.findIndex(hasMostVotes);
 
   return (
     <div>
       <div>
         <Header text="Anecdote of the day" />
         <div>{anecdotes[selected]}</div>
-        <div>has {points[selected]} votes</div>
+        <div>has {votes[selected]} votes</div>
         <Button handleClick={handleVote} text="Vote" />
         <Button handleClick={handleNext} text="Next Anecdote" />
       </div>
       <div>
         <Header text="Anecdote with most votes" />
-        <div>{anecdotes[mostVotesIndex]}</div>
-        <div>has {mostVotes} votes</div>
+        <div>{anecdotes[mostVotes]}</div>
+        <div>has {votes[mostVotes]} votes</div>
       </div>
     </div>
   );
