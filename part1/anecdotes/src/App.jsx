@@ -37,12 +37,6 @@ function App() {
     }
   };
 
-  // const mostVotes = Math.max(...votes);
-
-  // const hasMostVotes = (element) => element === mostVotes;
-
-  // const mostVotesIndex = votes.findIndex(hasMostVotes);
-
   return (
     <div>
       <div>
