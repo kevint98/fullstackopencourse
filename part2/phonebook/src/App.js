@@ -43,7 +43,7 @@ const App = () => {
     nameFilter === ''
       ? persons
       : persons.filter((person) =>
-          person.name.toLowerCase().includes(nameFilter)
+          person.name.toLowerCase().includes(nameFilter.toLocaleLowerCase())
         );
 
   return (
