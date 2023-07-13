@@ -3,12 +3,14 @@ import personService from './services/persons';
 import Persons from './components/Persons';
 import Filter from './components/Filter';
 import PersonForm from './components/PersonForm';
+import Notification from './components/Notification';
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [nameFilter, setNameFilter] = useState('');
+  const [message, setMessage] = useState({ body: '', type: 'success' });
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -25,13 +27,28 @@ const App = () => {
     )
       ? personService
           .updatePerson(updatedPerson)
-          .then((returnedPerson) =>
+          .then((returnedPerson) => {
             setPersons(
               persons.map((p) =>
                 p.id !== updatedPerson.id ? p : returnedPerson
               )
-            )
-          )
+            );
+            setMessage({ ...message, body: `Updated ${newName}` });
+            setTimeout(() => {
+              setMessage({ ...message, body: '' });
+            }, 5000);
+          })
+          .catch((error) => {
+            setMessage({
+              ...message,
+              body: `Information for ${newName} has already been removed from server`,
+              type: 'error',
+            });
+            setTimeout(() => {
+              setMessage({ ...message, body: '' });
+            }, 5000);
+            setPersons(persons.filter((p) => p.id !== foundPerson.id));
+          })
       : null;
   };
 
@@ -45,9 +62,16 @@ const App = () => {
 
     persons.some((person) => person.name === newName)
       ? updatePerson(newPerson)
-      : personService
-          .createPerson(newPerson)
-          .then((returnedPerson) => setPersons(persons.concat(returnedPerson)));
+      : personService.createPerson(newPerson).then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setMessage({ ...message, body: `Added ${newName}` });
+          setTimeout(() => {
+            setMessage({ ...message, body: '' });
+          }, 5000);
+        });
+
+    //
+
     setNewName('');
     setNewNumber('');
   };
@@ -72,6 +96,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={message} />
 
       <Filter value={nameFilter} handleChange={handleNameFilter} />
 
