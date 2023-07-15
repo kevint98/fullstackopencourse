@@ -70,8 +70,6 @@ const App = () => {
           }, 5000);
         });
 
-    //
-
     setNewName('');
     setNewNumber('');
   };
