@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import personService from './services/persons';
-import Persons from './components/Persons';
-import Filter from './components/Filter';
-import PersonForm from './components/PersonForm';
-import Notification from './components/Notification';
+import { useState, useEffect } from "react";
+import personService from "./services/persons";
+import Persons from "./components/Persons";
+import Filter from "./components/Filter";
+import PersonForm from "./components/PersonForm";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState('');
-  const [newNumber, setNewNumber] = useState('');
-  const [nameFilter, setNameFilter] = useState('');
-  const [message, setMessage] = useState({ body: '', type: 'success' });
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
+  const [message, setMessage] = useState({ body: "", type: "success" });
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -35,17 +35,17 @@ const App = () => {
             );
             setMessage({ ...message, body: `Updated ${newName}` });
             setTimeout(() => {
-              setMessage({ ...message, body: '' });
+              setMessage({ ...message, body: "" });
             }, 5000);
           })
           .catch((error) => {
             setMessage({
               ...message,
-              body: `Information for ${newName} has already been removed from server`,
-              type: 'error',
+              body: error.response.data,
+              type: "error",
             });
             setTimeout(() => {
-              setMessage({ ...message, body: '' });
+              setMessage({ ...message, body: "" });
             }, 5000);
             setPersons(persons.filter((p) => p.id !== foundPerson.id));
           })
@@ -66,12 +66,12 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setMessage({ ...message, body: `Added ${newName}` });
           setTimeout(() => {
-            setMessage({ ...message, body: '' });
+            setMessage({ ...message, body: "" });
           }, 5000);
         });
 
-    setNewName('');
-    setNewNumber('');
+    setNewName("");
+    setNewNumber("");
   };
 
   const handleNameChange = (event) => {
@@ -85,7 +85,7 @@ const App = () => {
   const handleNameFilter = (event) => setNameFilter(event.target.value);
 
   const personsToShow =
-    nameFilter === ''
+    nameFilter === ""
       ? persons
       : persons.filter((person) =>
           person.name.toLowerCase().includes(nameFilter.toLocaleLowerCase())

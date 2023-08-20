@@ -1,5 +1,5 @@
-import personService from '../services/persons';
-import Person from './Person';
+import personService from "../services/persons";
+import Person from "./Person";
 
 const Persons = ({ persons, editPersons }) => {
   const handleDelete = (id) => {
@@ -16,7 +16,7 @@ const Persons = ({ persons, editPersons }) => {
     <div>
       {persons.map(({ name, number, id }) => (
         <Person
-          key={name}
+          key={id}
           name={name}
           number={number}
           handleDelete={() => handleDelete(id)}
