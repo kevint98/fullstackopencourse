@@ -41,13 +41,15 @@ const App = () => {
           .catch((error) => {
             setMessage({
               ...message,
-              body: error.response.data,
+              body: error.response.data.error,
               type: "error",
             });
             setTimeout(() => {
               setMessage({ ...message, body: "" });
             }, 5000);
-            setPersons(persons.filter((p) => p.id !== foundPerson.id));
+            if (error.response.status === 404) {
+              setPersons(persons.filter((p) => p.id !== foundPerson.id));
+            }
           })
       : null;
   };
@@ -62,13 +64,25 @@ const App = () => {
 
     persons.some((person) => person.name === newName)
       ? updatePerson(newPerson)
-      : personService.createPerson(newPerson).then((returnedPerson) => {
-          setPersons(persons.concat(returnedPerson));
-          setMessage({ ...message, body: `Added ${newName}` });
-          setTimeout(() => {
-            setMessage({ ...message, body: "" });
-          }, 5000);
-        });
+      : personService
+          .createPerson(newPerson)
+          .then((returnedPerson) => {
+            setPersons(persons.concat(returnedPerson));
+            setMessage({ ...message, body: `Added ${newName}` });
+            setTimeout(() => {
+              setMessage({ ...message, body: "" });
+            }, 5000);
+          })
+          .catch((error) => {
+            setMessage({
+              ...message,
+              body: error.response.data.error,
+              type: "error",
+            });
+            setTimeout(() => {
+              setMessage({ ...message, body: "" });
+            }, 5000);
+          });
 
     setNewName("");
     setNewNumber("");
